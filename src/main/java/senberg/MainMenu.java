@@ -10,7 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
-public class MainMenu extends AbstractScreen {
+import java.lang.reflect.Array;
+
+public class MainMenu extends GameScreen implements DecoratedScreen {
     SpriteBatch backgroundBatch;
     SpriteBatch foregroundBatch;
     BitmapFont font;
@@ -20,6 +22,7 @@ public class MainMenu extends AbstractScreen {
     ShaderProgram seascapeShader;
     Texture fillerTexture;
     float time = 0;
+    float[] v_resolution;
 
     public MainMenu(Game game) {
         super(game);
@@ -27,14 +30,15 @@ public class MainMenu extends AbstractScreen {
 
     @Override
     public void show() {
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.translate(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
+        camera.update();
         defaultShader = createShader("shaders/default.vertex.glsl", "shaders/default.fragment.glsl");
         seascapeShader = createShader("shaders/seascape.vertex.glsl", "shaders/seascape.fragment.glsl");
         backgroundBatch = new SpriteBatch(1, seascapeShader);
         fillerTexture = new Texture("filler.png");
+        v_resolution = new float[]{Gdx.graphics.getWidth(), Gdx.graphics.getHeight()};
         foregroundBatch = new SpriteBatch(8191, defaultShader);
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.translate(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
-        camera.update();
 
         font = new BitmapFont();
 
@@ -58,13 +62,13 @@ public class MainMenu extends AbstractScreen {
     @Override
     public void render(float delta) {
         time += delta;
+
         backgroundBatch.begin();
-        float[] v_resolution = {Gdx.graphics.getWidth(), Gdx.graphics.getHeight()};
         seascapeShader.setUniform2fv("v_resolution", v_resolution, 0, v_resolution.length);
         seascapeShader.setUniformf("f_time", time);
         backgroundBatch.draw(fillerTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         backgroundBatch.end();
-        foregroundBatch.setProjectionMatrix(camera.combined);
+
         foregroundBatch.begin();
         font.draw(foregroundBatch, text, Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() * 0.75f);
         foregroundBatch.end();

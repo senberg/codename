@@ -15,7 +15,7 @@ public class Codename extends Game {
     public static void main(String[] arg) {
         Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-        config.setTitle("Codename");
+        config.setTitle("Codename - the best game ever.");
         config.setWindowIcon("icon.png");
         config.setWindowPosition(0, 0);
         config.setWindowedMode(displayMode.width, displayMode.height);

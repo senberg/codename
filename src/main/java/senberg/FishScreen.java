@@ -14,7 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import java.util.HashSet;
 import java.util.Set;
 
-public class FishScreen extends AbstractScreen {
+public class FishScreen extends GameScreen implements DecoratedScreen {
     SpriteBatch spriteBatch;
     BitmapFont font;
     OrthographicCamera camera;
