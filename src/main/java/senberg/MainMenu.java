@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import senberg.island.IslandScreen;
 
 import java.lang.reflect.Array;
 
@@ -17,7 +18,7 @@ public class MainMenu extends GameScreen implements DecoratedScreen {
     SpriteBatch foregroundBatch;
     BitmapFont font;
     OrthographicCamera camera;
-    String text = "Welcome to the Fish Demo!\n\nUse enter / escape!";
+    String text = "Welcome to the Fish Demo!\n\n1. Enter fish demo.\n2. Enter the island.";
     ShaderProgram defaultShader;
     ShaderProgram seascapeShader;
     Texture fillerTexture;
@@ -49,9 +50,12 @@ public class MainMenu extends GameScreen implements DecoratedScreen {
                     case Input.Keys.ESCAPE:
                         Gdx.app.exit();
                         return true;
-                    case Input.Keys.ENTER:
-                    case Input.Keys.SPACE:
+                    case Input.Keys.NUM_1:
                         game.setScreen(new FishScreen(game));
+                        return true;
+                    case Input.Keys.NUM_2:
+                        game.setScreen(new IslandScreen(game));
+                        return true;
                     default:
                         return false;
                 }
