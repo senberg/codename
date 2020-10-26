@@ -68,6 +68,9 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
         total += delta;
         //handleInput(delta);
         player.handleInput(delta);
+        camera.position.x = player.positionX;
+        camera.position.y = player.positionY;
+        camera.update();
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.setProjectionMatrix(camera.combined);
