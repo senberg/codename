@@ -3,7 +3,7 @@ package senberg.island;
 public class CharacterTileSet extends TileSet {
 
     public CharacterTileSet() {
-        super("character.tileset.png", 602);
+        super("character-spritesheet.png", 602);
     }
 
     public enum CharacterTileType implements TileType {

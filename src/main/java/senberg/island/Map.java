@@ -89,13 +89,13 @@ public class Map {
         int minTileX = (int) Math.floor(camera.position.x - halfViewportWidth);
         minTileX = Math.max(minTileX, 0);
         int maxTileX = (int) Math.ceil(camera.position.x + halfViewportWidth);
-        maxTileX = Math.min(maxTileX, MAP_SIZE);
+        maxTileX = Math.min(maxTileX, MAP_SIZE-1);
 
         float halfViewportHeight = camera.viewportHeight * camera.zoom / 2;
         int minTileY = (int) Math.floor(camera.position.y - halfViewportHeight);
         minTileY = Math.max(minTileY, 0);
         int maxTileY = (int) Math.ceil(camera.position.y + halfViewportHeight);
-        maxTileY = Math.min(maxTileY, MAP_SIZE);
+        maxTileY = Math.min(maxTileY, MAP_SIZE-1);
 
         for (int x = minTileX; x <= maxTileX; x++) {
             for (int y = minTileY; y <= maxTileY; y++) {

@@ -19,6 +19,7 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
     float cameraZoomMinimum = 0.25f;
     float cameraZoomMaximum = 4;
     Map islandMap;
+    Character player;
 
     public IslandScreen(Game game) {
         super(game);
@@ -34,6 +35,7 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
         camera = new OrthographicCamera(viewPortWidth, viewPortHeight);
         camera.translate(Map.MAP_SIZE / 2.0f, Map.MAP_SIZE / 2.0f);
         camera.update();
+        player = new Character(Map.MAP_SIZE / 2.0f, Map.MAP_SIZE / 2.0f);
 
         islandMap = new RandomMap();
 
@@ -62,13 +64,15 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
 
     @Override
     public void render(float delta) {
-        handleInput(delta);
+        //handleInput(delta);
+        player.handleInput(delta);
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
 
         islandMap.draw(spriteBatch, camera);
+        player.draw(spriteBatch);
 
         spriteBatch.end();
     }
