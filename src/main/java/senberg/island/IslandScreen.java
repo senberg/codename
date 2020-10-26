@@ -6,25 +6,20 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.math.Vector3;
 import senberg.DecoratedScreen;
 import senberg.GameScreen;
 import senberg.MainMenu;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class IslandScreen extends GameScreen implements DecoratedScreen {
     SpriteBatch spriteBatch;
     OrthographicCamera camera;
-    float cameraSpeed = 200;
+    float cameraSpeed = 20;
     float cameraZoomSpeed = 1;
     float cameraZoomMinimum = 0.25f;
     float cameraZoomMaximum = 4;
     Map islandMap;
+
     public IslandScreen(Game game) {
         super(game);
     }
@@ -33,11 +28,11 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
     public void show() {
         Map.init();
         spriteBatch = new SpriteBatch(8191);
-        float aspectRatio = (float)Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
-        int viewPortWidth = 256;
-        int viewPortHeight = (int)(viewPortWidth * aspectRatio);
+        float aspectRatio = (float) Gdx.graphics.getHeight() / Gdx.graphics.getWidth();
+        int viewPortWidth = 25;
+        int viewPortHeight = (int) (viewPortWidth * aspectRatio);
         camera = new OrthographicCamera(viewPortWidth, viewPortHeight);
-        camera.translate(2800, 2600);
+        camera.translate(Map.MAP_SIZE / 2.0f, Map.MAP_SIZE / 2.0f);
         camera.update();
 
         islandMap = new RandomMap();
@@ -52,6 +47,15 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
                     default:
                         return false;
                 }
+            }
+
+            @Override
+            public boolean scrolled(int amount) {
+                camera.zoom += amount * cameraZoomSpeed / 20;
+                camera.zoom = Math.max(camera.zoom, cameraZoomMinimum);
+                camera.zoom = Math.min(camera.zoom, cameraZoomMaximum);
+                camera.update();
+                return true;
             }
         });
     }
@@ -70,28 +74,38 @@ public class IslandScreen extends GameScreen implements DecoratedScreen {
     }
 
     private void handleInput(float delta) {
+        boolean updated = false;
+
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             camera.position.y += delta * cameraSpeed;
+            updated = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             camera.position.y -= delta * cameraSpeed;
+            updated = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             camera.position.x -= delta * cameraSpeed;
+            updated = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             camera.position.x += delta * cameraSpeed;
+            updated = true;
         }
         if (Gdx.input.isKeyPressed(Input.Keys.Q)) {
+            updated = true;
             camera.zoom -= delta * cameraZoomSpeed;
             camera.zoom = Math.max(camera.zoom, cameraZoomMinimum);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            updated = true;
             camera.zoom += delta * cameraZoomSpeed;
             camera.zoom = Math.min(camera.zoom, cameraZoomMaximum);
         }
 
-        camera.update();
+        if (updated) {
+            camera.update();
+        }
     }
 
     @Override

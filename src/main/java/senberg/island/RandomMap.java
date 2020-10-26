@@ -1,81 +1,87 @@
 package senberg.island;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import senberg.Randomizer;
+
+import static senberg.island.TerrainTileSet.TerrainTileType.*;
 
 public class RandomMap extends Map {
     private static final int GENERATIONS = 64;
 
     private boolean[][] generateIslands() {
+        System.out.println("Generating islands...");
+        long start = System.currentTimeMillis();
         boolean[][] current = new boolean[MAP_SIZE][MAP_SIZE];
+        int indexMin = 1;
+        int indexMax = MAP_SIZE - 1;
 
-        for (int x = 0; x < MAP_SIZE; x++) {
-            for (int y = 0; y < MAP_SIZE; y++) {
-                if (x == 0 || x == MAP_SIZE - 1 || y == 0 || y == MAP_SIZE - 1) {
-                    current[x][y] = false;
-                } else {
-                    current[x][y] = RandomHelper.getRandomBoolean();
-                }
+        for (int x = indexMin; x < indexMax; x++) {
+            for (int y = indexMin; y < indexMax; y++) {
+                current[x][y] = Randomizer.getBoolean();
             }
         }
 
         for (int i = 0; i < GENERATIONS; i++) {
             boolean[][] generation = new boolean[MAP_SIZE][MAP_SIZE];
 
-            for (int x = 0; x < MAP_SIZE; x++) {
-                for (int y = 0; y < MAP_SIZE; y++) {
-                    if (x == 0 || x == MAP_SIZE - 1 || y == 0 || y == MAP_SIZE - 1) {
-                        generation[x][y] = false;
-                    } else {
-                        int neighbours = 0;
-                        if (current[x - 1][y - 1]) neighbours++;
-                        if (current[x - 1][y]) neighbours++;
-                        if (current[x - 1][y + 1]) neighbours++;
-                        if (current[x][y - 1]) neighbours++;
-                        if (current[x][y]) neighbours++;
-                        if (current[x][y + 1]) neighbours++;
-                        if (current[x + 1][y - 1]) neighbours++;
-                        if (current[x + 1][y]) neighbours++;
-                        if (current[x + 1][y + 1]) neighbours++;
+            for (int x = indexMin; x < indexMax; x++) {
+                for (int y = indexMin; y < indexMax; y++) {
+                    int neighbours = 0;
+                    if (current[x - 1][y - 1]) neighbours++;
+                    if (current[x - 1][y]) neighbours++;
+                    if (current[x - 1][y + 1]) neighbours++;
+                    if (current[x][y - 1]) neighbours++;
+                    if (current[x][y]) neighbours++;
+                    if (current[x][y + 1]) neighbours++;
+                    if (current[x + 1][y - 1]) neighbours++;
+                    if (current[x + 1][y]) neighbours++;
+                    if (current[x + 1][y + 1]) neighbours++;
 
-                        generation[x][y] = neighbours > 4;
-                    }
+                    generation[x][y] = neighbours > 4;
                 }
             }
 
             current = generation;
         }
 
-
+        long timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("Completed in " + timeElapsed + "ms.");
         return current;
     }
-
-
 
 
     public RandomMap() {
         boolean[][] islands = generateIslands();
 
+        System.out.println("Creating ground sprites...");
+        long start = System.currentTimeMillis();
+
         for (int x = 0; x < MAP_SIZE; x++) {
             for (int y = 0; y < MAP_SIZE; y++) {
                 if (islands[x][y]) {
-                    Sprite ground = tileSet.createSprite(RandomHelper.getRandomInt(9) % 6, 11);
-                    Tile tile = new Tile(TerrainType.grass, ground, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE);
-                    tiles[x][y] = tile;
+                    tiles[x][y] = new Tile(TerrainType.grass, getGrassSprite(), getGrassSprite(), getGrassSprite(), getGrassSprite(), x, y);
                 } else {
-                    Sprite ground;
-
-                    if (RandomHelper.getRandomInt(10) < 8) {
-                        ground = tileSet.createSprite(28, 3);
-                    } else {
-                        ground = tileSet.createSprite(RandomHelper.getRandomInt(3) + 27, 5);
-                    }
-
-                    Tile tile = new Tile(TerrainType.water, ground, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE);
-                    tiles[x][y] = tile;
+                    tiles[x][y] = new Tile(TerrainType.water, getWaterSprite(), getWaterSprite(), getWaterSprite(), getWaterSprite(), x, y);
                 }
             }
         }
 
+        long timeElapsed = System.currentTimeMillis() - start;
+        System.out.println("Completed in " + timeElapsed + "ms.");
         addTransitions();
+    }
+
+    private Sprite getWaterSprite() {
+        if (Randomizer.getInt(10) < 8) {
+            return tileSet.createSprite(WATER);
+        } else {
+            TileSet.TileType tileType = TileSet.TileType.getRandom(WATER_VARIATION_1, WATER_VARIATION_2, WATER_VARIATION_3);
+            return tileSet.createSprite(tileType);
+        }
+    }
+
+    private Sprite getGrassSprite() {
+        TileSet.TileType tileType = TileSet.TileType.getRandom(GRASS, GRASS_LEAVES_1, GRASS_LEAVES_2, GRASS_LEAVES_3, GRASS_FLOWERS_1, GRASS_FLOWERS_2, GRASS_FLOWERS_3);
+        return tileSet.createSprite(tileType);
     }
 }

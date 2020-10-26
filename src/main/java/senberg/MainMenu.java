@@ -9,9 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import senberg.fish.FishScreen;
 import senberg.island.IslandScreen;
-
-import java.lang.reflect.Array;
 
 public class MainMenu extends GameScreen implements DecoratedScreen {
     SpriteBatch backgroundBatch;

@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 
 public class GameScreen {
-    static{
+    static {
         ShaderProgram.pedantic = false;
     }
 

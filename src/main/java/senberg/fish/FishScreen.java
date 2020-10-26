@@ -1,4 +1,4 @@
-package senberg;
+package senberg.fish;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -10,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector3;
+import senberg.DecoratedScreen;
+import senberg.GameScreen;
+import senberg.MainMenu;
 
 import java.util.HashSet;
 import java.util.Set;
