@@ -84,6 +84,7 @@ public class MainMenu extends GameScreen implements DecoratedScreen {
         backgroundBatch.dispose();
         font.dispose();
         fillerTexture.dispose();
+        defaultShader.dispose();
         seascapeShader.dispose();
     }
 }

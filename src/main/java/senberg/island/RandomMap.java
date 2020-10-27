@@ -51,6 +51,7 @@ public class RandomMap extends Map {
 
 
     public RandomMap() {
+        super();
         boolean[][] islands = generateIslands();
 
         System.out.println("Creating ground sprites...");

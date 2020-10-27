@@ -2,6 +2,7 @@ package senberg.island;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import senberg.Randomizer;
 
 import static senberg.island.TerrainTileSet.TerrainTileType.*;
 
@@ -9,13 +10,13 @@ public class Map {
     public static final int MAP_SIZE = 256;
 
     final Tile[][] tiles = new Tile[MAP_SIZE][MAP_SIZE];
-    static TileSet tileSet;
+    final TileSet tileSet;
 
-    static void init() {
+    public Map() {
         tileSet = new TerrainTileSet();
     }
 
-    static void dispose() {
+    void dispose() {
         tileSet.dispose();
     }
 
@@ -85,17 +86,23 @@ public class Map {
     }
 
     public void draw(Batch batch, OrthographicCamera camera) {
+        /*
         float halfViewportWidth = camera.viewportWidth * camera.zoom / 2;
         int minTileX = (int) Math.floor(camera.position.x - halfViewportWidth);
         minTileX = Math.max(minTileX, 0);
         int maxTileX = (int) Math.ceil(camera.position.x + halfViewportWidth);
-        maxTileX = Math.min(maxTileX, MAP_SIZE-1);
+        maxTileX = Math.min(maxTileX, MAP_SIZE - 1);
 
         float halfViewportHeight = camera.viewportHeight * camera.zoom / 2;
         int minTileY = (int) Math.floor(camera.position.y - halfViewportHeight);
         minTileY = Math.max(minTileY, 0);
         int maxTileY = (int) Math.ceil(camera.position.y + halfViewportHeight);
-        maxTileY = Math.min(maxTileY, MAP_SIZE-1);
+        maxTileY = Math.min(maxTileY, MAP_SIZE - 1);
+        */
+        int minTileX = 0;
+        int minTileY = 0;
+        int maxTileX = MAP_SIZE-1;
+        int maxTileY = MAP_SIZE-1;
 
         for (int x = minTileX; x <= maxTileX; x++) {
             for (int y = minTileY; y <= maxTileY; y++) {
@@ -104,4 +111,36 @@ public class Map {
         }
     }
 
+    public float getTileSize(){
+        return 1;
+    }
+
+    public boolean isWalkable(float x, float y){
+        Tile tile = getTileFromPosition(x, y);
+        return tile != null && tile.terrainType == TerrainType.grass;
+    }
+
+    private Tile getTileFromPosition(float x, float y){
+        int xIndex = (int)Math.floor(x);
+        int yIndex = (int)Math.floor(y);
+
+        if(xIndex > 0 && xIndex < MAP_SIZE && yIndex > 0 && yIndex < MAP_SIZE) {
+            return tiles[xIndex][yIndex];
+        }
+        else{
+            return null;
+        }
+    }
+
+    public Tile getRandomWalkableTile() {
+        while(true){
+            int x = Randomizer.getInt(MAP_SIZE);
+            int y = Randomizer.getInt(MAP_SIZE);
+            Tile tile = tiles[x][y];
+
+            if(tile.terrainType == TerrainType.grass){
+                return tile;
+            }
+        }
+    }
 }

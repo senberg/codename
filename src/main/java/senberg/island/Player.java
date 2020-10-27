@@ -9,12 +9,95 @@ import static senberg.island.Player.Action.*;
 import static senberg.island.PlayerTileSet.PlayerTileType.*;
 
 public class Player {
-    private static final float frameDuration = 0.1f;
+    private static final float size = 1.0f;
+    private static final float frameDuration = 0.05f;
     float positionX;
     float positionY;
-    float speed = 1;
-    Action action;
+    float speed = 2f;
+    Action action = Action.front_idle;
     PlayerTileSet tileSet;
+
+    public Player(float positionX, float positionY) {
+        tileSet = new PlayerTileSet();
+        this.positionX = positionX;
+        this.positionY = positionY;
+    }
+
+    public void dispose() {
+        tileSet.dispose();
+    }
+
+    public void handleInput(float delta, Map map) {
+        boolean moving = false;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            action = back_run;
+            float presumedY = positionY + speed * delta;
+            if (map.isWalkable(positionX, presumedY + 0.2f)) {
+                positionY = presumedY;
+                moving = true;
+            }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            action = front_run;
+            float presumedY = positionY - speed * delta;
+            if (map.isWalkable(positionX, presumedY - 0.6f)) {
+                positionY = presumedY;
+                moving = true;
+            }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            action = side_run_left;
+            float presumedX = positionX - speed * delta;
+            if (map.isWalkable(presumedX - 0.5f, positionY)) {
+                positionX = presumedX;
+                moving = true;
+            }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            action = side_run_right;
+            float presumedX = positionX + speed * delta;
+            if (map.isWalkable(presumedX + 0.5f, positionY)) {
+                positionX = presumedX;
+                moving = true;
+            }
+        }
+
+        if (!moving) {
+            switch (action) {
+                case back_run:
+                    action = back_idle;
+                    break;
+                case front_run:
+                    action = front_idle;
+                    break;
+                case side_run_left:
+                    action = side_idle_left;
+                    break;
+                case side_run_right:
+                    action = side_idle_right;
+                    break;
+            }
+        }
+    }
+
+    public void draw(Batch batch, float total) {
+        float animationDuration = action.tileTypes.length * frameDuration;
+        float currentAnimationTime = total % animationDuration;
+        int currentAnimationNumber = (int) Math.floor(currentAnimationTime / frameDuration);
+        TileSet.TileType tileType = action.tileTypes[currentAnimationNumber];
+        Sprite avatar = tileSet.createSprite(tileType, size);
+
+        if (action.flip) {
+            avatar.setFlip(true, false);
+        }
+
+        avatar.setPosition(positionX - size / 2, positionY - size / 2);
+        avatar.draw(batch);
+    }
 
     enum Action {
         front_idle(Front_Idle_000, Front_Idle_001, Front_Idle_002, Front_Idle_003, Front_Idle_004, Front_Idle_005, Front_Idle_006, Front_Idle_007, Front_Idle_008, Front_Idle_009, Front_Idle_010, Front_Idle_011),
@@ -37,57 +120,5 @@ public class Player {
             this.flip = flip;
             this.tileTypes = tileTypes;
         }
-    }
-
-    public Player(float positionX, float positionY) {
-        tileSet = new PlayerTileSet();
-        this.positionX = positionX;
-        this.positionY = positionY;
-        action = Action.front_idle;
-    }
-
-    public void handleInput(float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            positionY += speed * delta;
-            action = back_run;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            positionY -= speed * delta;
-            action = front_run;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            positionX -= speed * delta;
-            action = side_run_left;
-        } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            positionX += speed * delta;
-            action = side_run_right;
-        } else {
-            switch (action) {
-                case back_run:
-                    action = back_idle;
-                    break;
-                case front_run:
-                    action = front_idle;
-                    break;
-                case side_run_left:
-                    action = side_idle_left;
-                    break;
-                case side_run_right:
-                    action = side_idle_right;
-                    break;
-            }
-        }
-    }
-
-    public void draw(Batch batch, float total) {
-        float animationDuration = action.tileTypes.length * frameDuration;
-        float currentAnimationTime = total % animationDuration;
-        int currentAnimationNumber = (int) Math.floor(currentAnimationTime / frameDuration) ;
-        TileSet.TileType tileType = action.tileTypes[currentAnimationNumber];
-        System.out.println("TileType " + tileType);
-        Sprite avatar = tileSet.createSprite(tileType);
-        if(action.flip){
-            avatar.setFlip(true, false);
-        }
-        avatar.translate(positionX, positionY);
-        avatar.draw(batch);
     }
 }

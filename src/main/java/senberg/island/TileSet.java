@@ -13,17 +13,21 @@ public class TileSet {
         texture = new Texture(filename);
     }
 
-    public Sprite createSprite(int tileX, int tileY) {
+    public Sprite createSprite(int tileX, int tileY, float size) {
         int spriteXstart = tileX * tileSizePixels;
         int spriteYstart = tileY * tileSizePixels;
         Sprite sprite = new Sprite(texture, spriteXstart, spriteYstart, tileSizePixels, tileSizePixels);
         sprite.setOrigin(0, 0);
-        sprite.setScale(0.5f / tileSizePixels);
+        sprite.setScale(size / tileSizePixels);
         return sprite;
     }
 
+    public Sprite createSprite(TileType tileType, float size) {
+        return createSprite(tileType.getXPosition(), tileType.getYPosition(), size);
+    }
+
     public Sprite createSprite(TileType tileType) {
-        return createSprite(tileType.getXPosition(), tileType.getYPosition());
+        return createSprite(tileType.getXPosition(), tileType.getYPosition(), 0.5f);
     }
 
     public void dispose() {

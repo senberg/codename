@@ -13,41 +13,41 @@ public class Tile {
     private Sprite northEastEdge;
     private Sprite southWestEdge;
     private Sprite southEastEdge;
-    int positionX;
-    int positionY;
+    int xIndex;
+    int yIndex;
 
-    public Tile(TerrainType terrainType, Sprite northWestGround, Sprite northEastGround, Sprite southWestGround, Sprite southEastGround, int positionX, int positionY) {
+    public Tile(TerrainType terrainType, Sprite northWestGround, Sprite northEastGround, Sprite southWestGround, Sprite southEastGround, int xIndex, int yIndex) {
         this.terrainType = terrainType;
         this.northWestGround = northWestGround;
         this.northEastGround = northEastGround;
         this.southWestGround = southWestGround;
         this.southEastGround = southEastGround;
-        this.positionX = positionX;
-        this.positionY = positionY;
-        northWestGround.translate(positionX, positionY + 0.5f);
-        northEastGround.translate(positionX + 0.5f, positionY + 0.5f);
-        southWestGround.translate(positionX, positionY);
-        southEastGround.translate(positionX + 0.5f, positionY);
+        northWestGround.setPosition(xIndex, yIndex + 0.5f);
+        northEastGround.setPosition(xIndex + 0.5f, yIndex + 0.5f);
+        southWestGround.setPosition(xIndex, yIndex);
+        southEastGround.setPosition(xIndex + 0.5f, yIndex);
+        this.xIndex = xIndex;
+        this.yIndex = yIndex;
     }
 
     public void setNorthWestEdge(Sprite northWestEdge) {
         this.northWestEdge = northWestEdge;
-        northWestEdge.translate(positionX, positionY + 0.5f);
+        northWestEdge.translate(xIndex, yIndex + 0.5f);
     }
 
     public void setNorthEastEdge(Sprite northEastEdge) {
         this.northEastEdge = northEastEdge;
-        northEastEdge.translate(positionX + 0.5f, positionY + 0.5f);
+        northEastEdge.translate(xIndex + 0.5f, yIndex + 0.5f);
     }
 
     public void setSouthWestEdge(Sprite southWestEdge) {
         this.southWestEdge = southWestEdge;
-        southWestEdge.translate(positionX, positionY);
+        southWestEdge.translate(xIndex, yIndex);
     }
 
     public void setSouthEastEdge(Sprite southEastEdge) {
         this.southEastEdge = southEastEdge;
-        southEastEdge.translate(positionX + 0.5f, positionY);
+        southEastEdge.translate(xIndex + 0.5f, yIndex);
     }
 
     public void draw(Batch batch) {
