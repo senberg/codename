@@ -9,7 +9,7 @@ import static senberg.island.Player.Action.*;
 import static senberg.island.PlayerTileSet.PlayerTileType.*;
 
 public class Player {
-    private static final float size = 1.0f;
+    static final float size = 1.0f;
     private static final float frameDuration = 0.05f;
     float positionX;
     float positionY;
@@ -33,7 +33,7 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.W)) {
             action = back_run;
             float presumedY = positionY + speed * delta;
-            if (map.isWalkable(positionX, presumedY + 0.2f)) {
+            if (map.isWalkable(size, positionX, presumedY)) {
                 positionY = presumedY;
                 moving = true;
             }
@@ -42,7 +42,7 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
             action = front_run;
             float presumedY = positionY - speed * delta;
-            if (map.isWalkable(positionX, presumedY - 0.6f)) {
+            if (map.isWalkable(size, positionX, presumedY)) {
                 positionY = presumedY;
                 moving = true;
             }
@@ -51,7 +51,7 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             action = side_run_left;
             float presumedX = positionX - speed * delta;
-            if (map.isWalkable(presumedX - 0.5f, positionY)) {
+            if (map.isWalkable(size, presumedX, positionY)) {
                 positionX = presumedX;
                 moving = true;
             }
@@ -60,7 +60,7 @@ public class Player {
         if (Gdx.input.isKeyPressed(Input.Keys.D)) {
             action = side_run_right;
             float presumedX = positionX + speed * delta;
-            if (map.isWalkable(presumedX + 0.5f, positionY)) {
+            if (map.isWalkable(size, presumedX, positionY)) {
                 positionX = presumedX;
                 moving = true;
             }
@@ -95,7 +95,7 @@ public class Player {
             avatar.setFlip(true, false);
         }
 
-        avatar.setPosition(positionX - size / 2, positionY - size / 2);
+        avatar.setPosition(positionX - size / 2, positionY + 0.2f - size / 2);
         avatar.draw(batch);
     }
 

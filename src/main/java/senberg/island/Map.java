@@ -86,7 +86,7 @@ public class Map {
     }
 
     public void draw(Batch batch, OrthographicCamera camera) {
-        /*
+
         float halfViewportWidth = camera.viewportWidth * camera.zoom / 2;
         int minTileX = (int) Math.floor(camera.position.x - halfViewportWidth);
         minTileX = Math.max(minTileX, 0);
@@ -98,11 +98,8 @@ public class Map {
         minTileY = Math.max(minTileY, 0);
         int maxTileY = (int) Math.ceil(camera.position.y + halfViewportHeight);
         maxTileY = Math.min(maxTileY, MAP_SIZE - 1);
-        */
-        int minTileX = 0;
-        int minTileY = 0;
-        int maxTileX = MAP_SIZE-1;
-        int maxTileY = MAP_SIZE-1;
+
+
 
         for (int x = minTileX; x <= maxTileX; x++) {
             for (int y = minTileY; y <= maxTileY; y++) {
@@ -118,6 +115,17 @@ public class Map {
     public boolean isWalkable(float x, float y){
         Tile tile = getTileFromPosition(x, y);
         return tile != null && tile.terrainType == TerrainType.grass;
+    }
+    public boolean isWalkable(float size, float x, float y){
+        return  isWalkable(x, y+size/2) &&
+                isWalkable(x, y-size/2) &&
+                isWalkable(x+size/3, y+size/3) &&
+                isWalkable(x+size/3, y-size/3) &&
+                isWalkable(x+size/2, y) &&
+                isWalkable(x-size/2, y) &&
+                isWalkable(x-size/3, y-size/3) &&
+                isWalkable(x-size/3, y+size/3);
+
     }
 
     private Tile getTileFromPosition(float x, float y){
