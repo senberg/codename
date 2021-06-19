@@ -1,1 +1,1 @@
-Welcome to my super awesome fish demo project.
+Awesome graphics i java, opengl shaders, tilemaps etc.
